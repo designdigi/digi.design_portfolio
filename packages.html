@@ -580,19 +580,27 @@ nav.scrolled .compact-logo { transform: scale(0.9); }
     <div id="scroll-progress"></div>
 
     <!-- Modern Nav Sync -->
-    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 py-2 h-16 min-h-[70px] border-b border-transparent">
+    <nav
+        class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 py-2 h-16 min-h-[70px] max-w-full mx-auto border-b border-transparent">
         <div class="flex items-center gap-3">
-            <a href="index.html"><img src="./images/logo.png" alt="Digi Design Logo" class="compact-logo object-contain flex-shrink-0"></a>
+            <img src="./images/logo.png" alt="Digi Design Logo" class="compact-logo object-contain flex-shrink-0">
         </div>
         <div class="hidden md:flex gap-8 items-center">
-            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors" href="index.html">Home</a>
-            <a class="text-blue-600 font-bold text-xs uppercase tracking-[0.05em] transition-colors" href="packages.html">Packages</a>
-            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors" href="index.html#about">About</a>
-            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors" href="index.html#contact">Contact</a>
+            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors"
+                href="index.html">Home</a>
+            <a class="text-blue-600 font-bold text-xs uppercase tracking-[0.05em] transition-colors"
+                href="packages.html">Packages</a>
+            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors"
+                href="index.html#about">About</a>
+            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors"
+                href="index.html#contact">Contact</a>
         </div>
         <div class="flex items-center gap-4">
-            <button onclick="document.getElementById('mobile-nav').classList.remove('translate-x-full')" class="md:hidden material-symbols-outlined text-zinc-900">menu</button>
-            <a href="tel:+917845834708" class="hidden md:block bg-zinc-900 hover:bg-black text-white px-4 py-1.5 rounded-md text-xs uppercase tracking-[0.05em] font-bold transition">Book Call</a>
+            <button onclick="document.getElementById('mobile-nav').classList.remove('translate-x-full')"
+                class="md:hidden material-symbols-outlined text-zinc-900">menu</button>
+            <a href="tel:+917845834708"
+                class="hidden md:block bg-zinc-900 hover:bg-black text-white px-4 py-1.5 rounded-md text-xs uppercase tracking-[0.05em] font-bold transition">Book
+                Call</a>
         </div>
     </nav>
 
