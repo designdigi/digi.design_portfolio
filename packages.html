@@ -4,9 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Packages | Digi Design — A Story About Why Design Matters</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&family=Manrope:wght@400;500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 <style>
 :root {
   --bg-cream:    #fffafa;
@@ -22,7 +24,8 @@
   --accent-soft: #ef4444;
   --accent-deep: #991b1b;
   --serif:       'Cormorant Garamond', Georgia, serif;
-  --sans:        'Inter', sans-serif;
+  --sans:        'Manrope', sans-serif;
+  --headline:    'Epilogue', sans-serif;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
@@ -36,63 +39,31 @@ body {
 }
 .container { max-width: 1280px; margin: 0 auto; padding: 0 40px; }
 .container-narrow { max-width: 880px; margin: 0 auto; padding: 0 40px; }
-/* Navigation */
-nav.main-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-  padding: 30px 0;
-  transition: background 0.3s ease, padding 0.3s ease;
+/* Navigation Sync with index.html */
+nav { height: 70px !important; padding: 8px 0 !important; transition: all 0.3s ease; }
+nav.scrolled { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(20px); border-color: rgba(220, 38, 38, 0.1); box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+.compact-logo { max-height: 60px; height: auto; width: auto; transition: transform 0.3s ease; }
+nav.scrolled .compact-logo { transform: scale(0.9); }
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg-cream); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+/* CUSTOM CURSOR */
+.cursor-dot, .cursor-ring {
+    position: fixed; top: 0; left: 0; pointer-events: none;
+    z-index: 99999; opacity: 0; will-change: transform, opacity;
 }
-nav.main-nav.scrolled {
-  background: rgba(255, 250, 250, 0.95);
-  backdrop-filter: blur(10px);
-  padding: 20px 0;
-  border-bottom: 1px solid var(--hairline);
+.cursor-dot { width: 8px; height: 8px; border-radius: 999px; background: #dc2626; }
+.cursor-ring {
+    width: 36px; height: 36px; margin-left: -18px; margin-top: -18px;
+    border-radius: 999px; border: 1.5px solid rgba(220, 38, 38, 0.4);
+    transition: transform 0.15s ease-out, border-color 0.15s ease-out;
 }
-.nav-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.logo {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-.logo-img {
-  height: 72px;
-  width: auto;
-  object-fit: contain;
-  transition: height 0.3s ease;
-}
-nav.main-nav.scrolled .logo-img {
-  height: 54px;
-}
-.nav-links {
-  display: flex;
-  gap: 40px;
-  list-style: none;
-  margin-top: 14px;
-  transition: margin-top 0.3s ease;
-}
-nav.main-nav.scrolled .nav-links {
-  margin-top: 10px;
-}
-.nav-links a {
-  text-decoration: none;
-  color: var(--ink-soft);
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  transition: color 0.3s ease;
-}
-.nav-links a:hover {
-  color: var(--accent-deep);
-}
+.cursor-visible .cursor-dot, .cursor-visible .cursor-ring { opacity: 1; }
+@media (max-width: 1024px) { .cursor-dot, .cursor-ring { display: none !important; } }
+
 .reveal {
   opacity: 0;
   transform: translateY(40px);
@@ -368,22 +339,31 @@ nav.main-nav.scrolled .nav-links {
   box-shadow: 0 12px 28px rgba(239, 68, 68, 0.25);
 }
 .btn-booking:hover { transform: translateY(-3px); box-shadow: 0 18px 36px rgba(239, 68, 68, 0.35); }
-@media (max-width: 968px) {
-  .container, .container-narrow { padding: 0 24px; }
-  .scene { grid-template-columns: 1fr; gap: 0; padding: 60px 0; }
-  .scene-right { direction: ltr; }
-  .scene-numeral { font-size: 100px; }
-  .scene-content { padding-left: 0; padding-top: 16px; }
-  .packages-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
-  .chapter-pivot, .chapter-proof { padding: 100px 0; }
-  .chapter-open { min-height: auto; padding: 100px 0; }
+@media (max-width: 1024px) {
+  .container { padding: 0 24px; }
+  .packages-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
 }
-@media (max-width: 600px) {
-  .packages-grid { grid-template-columns: 1fr; }
-  .scene-numeral { font-size: 80px; }
-  .opening-headline { font-size: 44px; }
-  .pivot-headline, .offer-headline { font-size: 40px; }
-  .proof-stat { font-size: 64px; }
+@media (max-width: 768px) {
+  .chapter-open { padding: 120px 0 80px; text-align: center; }
+  .opening-headline { font-size: 38px; margin-bottom: 24px; }
+  .opening-subline { margin: 0 auto 32px; }
+  .opening-divider { margin: 0 auto; }
+  .eyebrow { justify-content: center; width: 100%; }
+  
+  .problems-grid { grid-template-columns: 1fr; gap: 24px; }
+  .scene-compact-inner { padding: 28px 22px; }
+  
+  .pivot-headline { font-size: 34px; }
+  .proof-stat { font-size: 60px; }
+  
+  .offer-header { text-align: center; }
+  .packages-grid { grid-template-columns: 1fr; gap: 24px; }
+  .package-card { padding: 40px 24px; }
+  
+  .cta-row { flex-direction: column; width: 100%; }
+  .btn { width: 100%; justify-content: center; }
+  
+  .side-progress-nav { display: none; }
 }
 /* Side Progress Nav */
 .side-progress-nav {
@@ -629,26 +609,47 @@ nav.main-nav.scrolled .nav-links {
 }
 </style>
 </head>
-<body id="story-top">
-<div class="side-progress-nav" id="sideNav">
-  <div class="side-dot active" data-target="story-top" data-label="Introduction"></div>
-  <div class="side-dot" data-target="problems" data-label="The Problem"></div>
-  <div class="side-dot" data-target="pivot" data-label="The Turn"></div>
-  <div class="side-dot" data-target="packages" data-label="The Offer"></div>
-  <div class="side-dot" data-target="contact" data-label="Connect"></div>
-</div>
-<nav class="main-nav" id="mainNav">
-  <div class="container nav-container">
-    <a href="index.html" class="logo">
-      <img src="./images/logo.png" alt="Digi Design Logo" class="logo-img">
-    </a>
-    <ul class="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="packages.html">Packages</a></li>
-      <li><a href="index.html#contact">Contact</a></li>
-    </ul>
-  </div>
-</nav>
+<body class="bg-[#fffafa] text-[#1a1a1a] font-sans" id="story-top">
+    <div class="cursor-dot"></div>
+    <div class="cursor-ring"></div>
+
+    <div class="side-progress-nav" id="sideNav">
+        <div class="side-dot active" data-target="story-top" data-label="Top"></div>
+        <div class="side-dot" data-target="problems" data-label="Problem"></div>
+        <div class="side-dot" data-target="pivot" data-label="Our Way"></div>
+        <div class="side-dot" data-target="packages" data-label="Packages"></div>
+        <div class="side-dot" data-target="contact" data-label="Connect"></div>
+    </div>
+
+    <!-- Modern Nav Sync -->
+    <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 py-2 h-16 min-h-[70px] border-b border-transparent">
+        <div class="flex items-center gap-3">
+            <a href="index.html"><img src="./images/logo.png" alt="Digi Design Logo" class="compact-logo object-contain flex-shrink-0"></a>
+        </div>
+        <div class="hidden md:flex gap-8 items-center">
+            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors" href="index.html">Home</a>
+            <a class="text-blue-600 font-bold text-xs uppercase tracking-[0.05em] transition-colors" href="packages.html">Packages</a>
+            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors" href="index.html#about">About</a>
+            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors" href="index.html#contact">Contact</a>
+        </div>
+        <div class="flex items-center gap-4">
+            <button onclick="document.getElementById('mobile-nav').classList.remove('-translate-x-full')" class="md:hidden material-symbols-outlined text-zinc-900">menu</button>
+            <a href="tel:+917845834708" class="hidden md:block bg-zinc-900 hover:bg-black text-white px-4 py-1.5 rounded-md text-xs uppercase tracking-[0.05em] font-bold transition">Book Call</a>
+        </div>
+    </nav>
+
+    <aside class="fixed inset-y-0 left-0 w-[85vw] bg-zinc-50 z-[100] transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col gap-2 p-6 shadow-2xl" id="mobile-nav">
+        <div class="flex items-center justify-between gap-3 mb-8">
+            <img src="./images/logo.png" alt="Digi Design Logo" class="compact-logo object-contain flex-shrink-0">
+            <span class="font-bold text-zinc-900 text-lg flex-1">Menu</span>
+            <button class="material-symbols-outlined text-zinc-900" onclick="document.getElementById('mobile-nav').classList.add('-translate-x-full')">close</button>
+        </div>
+        <a class="text-zinc-600 hover:bg-zinc-100 flex items-center gap-4 p-3 rounded-lg text-sm transition-all" href="index.html" onclick="document.getElementById('mobile-nav').classList.add('-translate-x-full')"><span class="material-symbols-outlined">home</span> Home</a>
+        <a class="text-zinc-600 hover:bg-zinc-100 flex items-center gap-4 p-3 rounded-lg text-sm transition-all" href="packages.html"><span class="material-symbols-outlined">inventory_2</span> Packages</a>
+        <a class="text-zinc-600 hover:bg-zinc-100 flex items-center gap-4 p-3 rounded-lg text-sm transition-all" href="index.html#about" onclick="document.getElementById('mobile-nav').classList.add('-translate-x-full')"><span class="material-symbols-outlined">info</span> About</a>
+        <a class="text-zinc-600 hover:bg-zinc-100 flex items-center gap-4 p-3 rounded-lg text-sm transition-all" href="index.html#contact" onclick="document.getElementById('mobile-nav').classList.add('-translate-x-full')"><span class="material-symbols-outlined">mail</span> Contact</a>
+        <a href="tel:+917845834708" class="bg-zinc-900 hover:bg-black text-white text-center p-3 rounded-lg font-bold mt-4 transition">Book a Call</a>
+    </aside>
 <section class="chapter-open">
   <div class="container">
     <div class="opening-mark reveal"><span class="eyebrow">A Story About Why Design Matters</span></div>
@@ -867,41 +868,52 @@ nav.main-nav.scrolled .nav-links {
     });
   });
 
-  /* ============================================
-     3D Tilt — Problem Cards
-     Mouse-tracked rotation that snaps back on leave.
-     ============================================ */
-  (function initTiltCards() {
-    const MAX_TILT = 9; // degrees
-    const cards = document.querySelectorAll('.scene-compact');
-    cards.forEach(card => {
-      const inner = card.querySelector('.scene-compact-inner');
-      if (!inner) return;
-      let rafId = null;
+  // --- Custom Cursor Logic ---
+  const dot = document.querySelector('.cursor-dot');
+  const ring = document.querySelector('.cursor-ring');
+  let mouseX = -100, mouseY = -100, ringX = -100, ringY = -100;
 
-      const handleMove = (e) => {
-        const rect = card.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        const cx = rect.width / 2;
-        const cy = rect.height / 2;
-        const ry = ((x - cx) / cx) * MAX_TILT;       // left/right tilt
-        const rx = -((y - cy) / cy) * MAX_TILT;      // up/down tilt
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(() => {
-          inner.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
-        });
-      };
+  document.addEventListener('mousemove', (e) => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+    if (!document.documentElement.classList.contains('cursor-visible')) {
+      document.documentElement.classList.add('cursor-visible');
+    }
+  });
 
-      const handleLeave = () => {
-        if (rafId) cancelAnimationFrame(rafId);
-        inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
-      };
+  const animateRing = () => {
+    ringX += (mouseX - ringX) * 0.15;
+    ringY += (mouseY - ringY) * 0.15;
+    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
+    requestAnimationFrame(animateRing);
+  };
+  animateRing();
 
-      card.addEventListener('mousemove', handleMove);
-      card.addEventListener('mouseleave', handleLeave);
+  document.querySelectorAll('a, button, .package-card, .scene-compact').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.style.transform += ' scale(1.5)');
+    el.addEventListener('mouseleave', () => ring.style.transform = ring.style.transform.replace(' scale(1.5)', ''));
+  });
+
+  // --- 3D Tilt Effect ---
+  const MAX_TILT = 9;
+  const cards = document.querySelectorAll('.scene-compact');
+  cards.forEach(card => {
+    const inner = card.querySelector('.scene-compact-inner');
+    if (!inner) return;
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const cx = rect.width / 2;
+      const cy = rect.height / 2;
+      const ry = ((x - cx) / cx) * MAX_TILT;
+      const rx = -((y - cy) / cy) * MAX_TILT;
+      inner.style.transform = `rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
     });
-  })();
+    card.addEventListener('mouseleave', () => {
+      inner.style.transform = 'rotateX(0deg) rotateY(0deg)';
+    });
+  });
 </script>
 </body>
 </html>
