@@ -50,6 +50,18 @@ nav.scrolled .compact-logo { transform: scale(0.9); }
 ::-webkit-scrollbar-track { background: var(--bg-cream); }
 ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
+/* Top Progress Bar */
+#scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 0%;
+    height: 4px;
+    background: linear-gradient(90deg, #dc2626, #f87171);
+    z-index: 10000;
+    transition: width-0.1s ease-out;
+}
+
 /* CUSTOM CURSOR */
 .cursor-dot, .cursor-ring {
     position: fixed; top: 0; left: 0; pointer-events: none;
@@ -365,54 +377,6 @@ nav.scrolled .compact-logo { transform: scale(0.9); }
   
   .side-progress-nav { display: none; }
 }
-/* Side Progress Nav */
-.side-progress-nav {
-  position: fixed;
-  right: 32px;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border-radius: 999px;
-  border: 1px solid rgba(220, 38, 38, 0.1);
-}
-.side-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: var(--muted-light);
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-}
-.side-dot::before {
-  content: attr(data-label);
-  position: absolute;
-  right: 24px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--ink);
-  color: #fff;
-  padding: 4px 12px;
-  border-radius: 6px;
-  font-size: 10px;
-  white-space: nowrap;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-}
-.side-dot:hover::before { opacity: 1; }
-.side-dot.active {
-  background: var(--accent);
-  transform: scale(1.4);
-  box-shadow: 0 0 10px var(--accent-soft);
-}
-.side-dot.active::before { opacity: 0; }
 
 /* ============================================
    3D TILT CARDS — Problems Grid
@@ -613,13 +577,7 @@ nav.scrolled .compact-logo { transform: scale(0.9); }
     <div class="cursor-dot"></div>
     <div class="cursor-ring"></div>
 
-    <div class="side-progress-nav" id="sideNav">
-        <div class="side-dot active" data-target="story-top" data-label="Top"></div>
-        <div class="side-dot" data-target="problems" data-label="Problem"></div>
-        <div class="side-dot" data-target="pivot" data-label="Our Way"></div>
-        <div class="side-dot" data-target="packages" data-label="Packages"></div>
-        <div class="side-dot" data-target="contact" data-label="Connect"></div>
-    </div>
+    <div id="scroll-progress"></div>
 
     <!-- Modern Nav Sync -->
     <nav class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 py-2 h-16 min-h-[70px] border-b border-transparent">
@@ -829,43 +787,17 @@ nav.scrolled .compact-logo { transform: scale(0.9); }
     });
   }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+  // --- Scroll Logic ---
   window.addEventListener('scroll', () => {
-    const nav = document.getElementById('mainNav');
-    const sideNav = document.getElementById('sideNav');
-    const sections = ['story-top', 'problems', 'pivot', 'packages', 'contact'];
-    const dots = document.querySelectorAll('.side-dot');
-    if (window.scrollY > 50) {
-      nav.classList.add('scrolled');
-    } else {
-      nav.classList.remove('scrolled');
-    }
-    // Scroll Spy for Side Nav
-    let current = '';
-    sections.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= 150) current = id;
-      }
-    });
-    dots.forEach(dot => {
-      dot.classList.remove('active');
-      if (dot.getAttribute('data-target') === current) {
-        dot.classList.add('active');
-      }
-    });
-  });
-  document.querySelectorAll('.side-dot').forEach(dot => {
-    dot.addEventListener('click', () => {
-      const targetId = dot.getAttribute('data-target');
-      const targetEl = document.getElementById(targetId);
-      if (targetEl) {
-        window.scrollTo({
-          top: targetEl.offsetTop - 80,
-          behavior: 'smooth'
-        });
-      }
-    });
+    const nav = document.querySelector('nav');
+    if (window.scrollY > 50) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+
+    const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+    const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    const progressEl = document.getElementById("scroll-progress");
+    if (progressEl) progressEl.style.width = scrolled + "%";
   });
 
   // --- Custom Cursor Logic ---

@@ -128,6 +128,18 @@
             transform: translate3d(var(--ring-x, -100px), var(--ring-y, -100px), 0) scale(0.82);
         }
 
+        /* Top Progress Bar */
+        #scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #dc2626, #f87171);
+            z-index: 10000;
+            transition: width 0.1s ease-out;
+        }
+
         /* TICKER */
         .ticker-section {
             width: 100%;
@@ -1843,63 +1855,7 @@
             }
         }
 
-        /* Side Progress Nav */
-        .side-progress-nav {
-            position: fixed;
-            right: 32px;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            padding: 12px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border-radius: 999px;
-            border: 1px solid rgba(220, 38, 38, 0.1);
-        }
-
-        .side-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: rgba(220, 38, 38, 0.2);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .side-dot::before {
-            content: attr(data-label);
-            position: absolute;
-            right: 24px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: #1a1a1a;
-            color: #fff;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 10px;
-            white-space: nowrap;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-
-        .side-dot:hover::before {
-            opacity: 1;
-        }
-
-        .side-dot.active {
-            background: #dc2626;
-            transform: scale(1.4);
-            box-shadow: 0 0 10px rgba(220, 38, 38, 0.5);
-        }
-
-        .side-dot.active::before {
-            opacity: 0;
-        }
+        /* Side Progress Removed */
 
         /* ============================================
            FOOTER — editorial, on-brand
@@ -2081,12 +2037,7 @@
     <div class="cursor-dot"></div>
     <div class="cursor-ring"></div>
 
-    <div class="side-progress-nav" id="sideNav">
-        <div class="side-dot active" data-target="story-top" data-label="Home"></div>
-        <div class="side-dot" data-target="about" data-label="About"></div>
-        <div class="side-dot" data-target="Gallery" data-label="Gallery"></div>
-        <div class="side-dot" data-target="contact" data-label="Contact"></div>
-    </div>
+    <div id="scroll-progress"></div>
 
     <!-- ========================== NAV (KEPT AS-IS) ========================== -->
     <nav
@@ -2922,39 +2873,13 @@
     </script>
     <script>
         window.addEventListener('scroll', () => {
-            const sections = ['story-top', 'about', 'Gallery', 'contact'];
-            const dots = document.querySelectorAll('.side-dot');
-            let current = '';
-
-            sections.forEach(id => {
-                const el = document.getElementById(id);
-                if (el) {
-                    const rect = el.getBoundingClientRect();
-                    if (rect.top <= 150) current = id;
-                }
-            });
-
-            dots.forEach(dot => {
-                dot.classList.remove('active');
-                if (dot.getAttribute('data-target') === current) {
-                    dot.classList.add('active');
-                }
-            });
-        });
-
-        document.querySelectorAll('.side-dot').forEach(dot => {
-            dot.addEventListener('click', () => {
-                const targetId = dot.getAttribute('data-target');
-                const targetEl = document.getElementById(targetId);
-                if (targetEl) {
-                    window.scrollTo({
-                        top: targetEl.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
-                }
-            });
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("scroll-progress").style.width = scrolled + "%";
         });
     </script>
+
 </body>
 
 </html>
