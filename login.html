@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - Digi Design Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-red-50 min-h-screen flex items-center justify-center p-6">
+  <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+    <h1 class="text-2xl font-bold text-red-800 mb-6 text-center">Dashboard Login</h1>
+
+    <input
+      type="password"
+      id="password"
+      placeholder="Enter password"
+      class="w-full p-3 border border-red-300 rounded-xl mb-4 outline-none focus:ring-2 focus:ring-red-300"
+    />
+
+    <button
+      id="loginBtn"
+      class="w-full bg-red-700 hover:bg-red-800 text-white font-semibold py-3 rounded-xl"
+    >
+      Login
+    </button>
+    <p id="errorMsg" class="text-red-600 text-sm mt-3 text-center hidden">Wrong password</p>
+  </div>
+
+  <script>
+    document.getElementById("loginBtn").addEventListener("click", function () {
+      const password = document.getElementById("password").value;
+
+      if (password === "admin123") {
+        localStorage.setItem("dashboardAuth", "true");
+        window.location.href = "dashboard.html";
+      } else {
+        document.getElementById("errorMsg").classList.remove("hidden");
+      }
+    });
+  </script>
+</body>
+</html>

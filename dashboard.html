@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Digi Design Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-red-50 min-h-screen p-6">
+
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-red-800">Digi Design Dashboard</h1>
+        <p class="text-sm text-gray-600 mt-1">Manage popup leads and contact form messages in one place</p>
+      </div>
+
+     <div class="flex gap-2">
+  <button id="refreshBtn" class="bg-blue-600 text-white px-4 py-2 rounded-lg">Refresh</button>
+  <button onclick="logout()" class="bg-gray-800 text-white px-4 py-2 rounded-lg">Logout</button>
+  <button id="downloadExcelBtn" class="bg-red-600 text-white px-4 py-2 rounded-lg">
+  Download Excel
+</button>
+</div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+      <div class="bg-white rounded-2xl shadow p-5">
+        <p class="text-sm text-gray-500">Total Leads</p>
+        <h2 id="totalLeads" class="text-3xl font-bold text-red-700">0</h2>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-5">
+        <p class="text-sm text-gray-500">Popup Leads</p>
+        <h2 id="popupLeads" class="text-3xl font-bold text-pink-700">0</h2>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-5">
+        <p class="text-sm text-gray-500">Contact Form</p>
+        <h2 id="contactLeads" class="text-3xl font-bold text-blue-700">0</h2>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-5">
+        <p class="text-sm text-gray-500">Latest Name</p>
+        <h2 id="latestName" class="text-xl font-semibold text-gray-800 break-words">-</h2>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow p-5">
+        <p class="text-sm text-gray-500">Latest Source</p>
+        <h2 id="latestSource" class="text-xl font-semibold text-gray-800 break-words">-</h2>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow overflow-hidden">
+      <div class="p-5 border-b">
+        <h3 class="text-xl font-semibold text-red-800">Recent Messages</h3>
+      </div>
+
+      <div class="p-5 border-b">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search by name, email, phone or message"
+            class="w-full p-3 rounded-xl border border-red-300 outline-none focus:ring-2 focus:ring-red-300 md:col-span-2"
+          />
+
+          <select
+            id="sourceFilter"
+            class="w-full p-3 rounded-xl border border-red-300 outline-none focus:ring-2 focus:ring-red-300"
+          >
+            <option value="all">All Sources</option>
+            <option value="Popup">Popup</option>
+            <option value="Contact Form">Contact Form</option>
+            <option value="Website">Website</option>
+          </select>
+
+          <button
+            id="clearSearchBtn"
+            class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold px-5 py-3 rounded-xl"
+          >
+            Clear Search
+          </button>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-red-700 text-white">
+            <tr>
+              <th class="p-4">Date</th>
+              <th class="p-4">Source</th>
+              <th class="p-4">Name</th>
+              <th class="p-4">Phone</th>
+              <th class="p-4">Email</th>
+              <th class="p-4">Message</th>
+              <th class="p-4">Status</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-gray-200">
+  <tr>
+    <td colspan="7" class="p-6 text-center text-gray-500">Loading data...</td>
+  </tr>
+</tbody>
+        </table>
+      </div>
+
+      <div id="emptyState" class="hidden p-8 text-center text-gray-500">
+        No leads found.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem("dashboardAuth") !== "true") {
+      window.location.href = "login.html";
+    } const API_URL = "https://script.google.com/macros/s/AKfycbwnfUwXSN3zUAe2egCmhbXduzYKuI3mzutdD7WNNEEkTLmMBvdYhIFMIhai1ZkSML962Q/exec?type=data";
+
+   
+
+    let allData = [];
+    let filteredData = [];
+
+    function escapeHtml(value) {
+      if (value === null || value === undefined) return "";
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function escapeCsvValue(value) {
+      if (value === null || value === undefined) return '""';
+      const stringValue = String(value).replace(/"/g, '""');
+      return `"${stringValue}"`;
+    }
+
+    function formatDate(value) {
+      if (!value) return "-";
+      const date = new Date(value);
+      if (isNaN(date.getTime())) return String(value);
+      return date.toLocaleString();
+    }
+
+    function normalizeSource(row) {
+      const rawSource = String(row.source || "").trim();
+      const message = String(row.message || "").toLowerCase();
+
+      if (rawSource) return rawSource;
+
+      if (message.includes("lead collected from popup form")) {
+        return "Popup";
+      }
+
+      if (message && !message.includes("lead collected from popup form")) {
+        return "Contact Form";
+      }
+
+      return "Website";
+    }
+
+    function normalizeRow(row) {
+      return {
+        date: row.date || "",
+        name: row.name || "-",
+        phone: row.phone || "-",
+        email: row.email || "-",
+        message: row.message || "-",
+        source: normalizeSource(row)
+      };
+    }
+
+    function getStatusBadge(row) {
+      const source = (row.source || "").toLowerCase();
+      const message = (row.message || "").toLowerCase();
+
+      let label = "New Lead";
+      let classes = "bg-blue-100 text-blue-700";
+
+      if (source === "popup") {
+        label = "Popup Lead";
+        classes = "bg-pink-100 text-pink-700";
+      } else if (source === "contact form") {
+        label = "Contact Lead";
+        classes = "bg-indigo-100 text-indigo-700";
+      }
+
+      if (message.includes("logo")) {
+        label = "Logo";
+        classes = "bg-purple-100 text-purple-700";
+      } else if (message.includes("visiting")) {
+        label = "Visiting Card";
+        classes = "bg-green-100 text-green-700";
+      } else if (message.includes("brochure")) {
+        label = "Brochure";
+        classes = "bg-yellow-100 text-yellow-700";
+      } else if (message.includes("poster")) {
+        label = "Poster";
+        classes = "bg-pink-100 text-pink-700";
+      } else if (message.includes("video")) {
+        label = "Video";
+        classes = "bg-orange-100 text-orange-700";
+      } else if (message.includes("branding")) {
+        label = "Branding";
+        classes = "bg-red-100 text-red-700";
+      }
+
+      return `<span class="inline-block px-3 py-1 rounded-full text-sm font-semibold ${classes}">${label}</span>`;
+    }
+
+    function updateCards(data) {
+      document.getElementById("totalLeads").textContent = data.length;
+
+      const popupCount = data.filter(row => (row.source || "").toLowerCase() === "popup").length;
+      const contactCount = data.filter(row => (row.source || "").toLowerCase() === "contact form").length;
+
+      document.getElementById("popupLeads").textContent = popupCount;
+      document.getElementById("contactLeads").textContent = contactCount;
+
+      if (data.length > 0) {
+        const latest = data[0];
+        document.getElementById("latestName").textContent = latest.name || "-";
+        document.getElementById("latestSource").textContent = latest.source || "-";
+      } else {
+        document.getElementById("latestName").textContent = "-";
+        document.getElementById("latestSource").textContent = "-";
+      }
+    }
+
+    function renderTable(data) {
+      updateCards(data);
+
+      const tableBody = document.getElementById("tableBody");
+      const emptyState = document.getElementById("emptyState");
+
+      tableBody.innerHTML = "";
+
+      if (!data.length) {
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+
+      data.forEach((row) => {
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-red-50 transition";
+
+        tr.innerHTML = `
+          <td class="p-4 align-top">${escapeHtml(formatDate(row.date))}</td>
+          <td class="p-4 align-top">
+            <span class="inline-block px-3 py-1 rounded-full text-sm font-semibold bg-gray-100 text-gray-700">
+              ${escapeHtml(row.source || "-")}
+            </span>
+          </td>
+          <td class="p-4 align-top font-medium text-gray-800">${escapeHtml(row.name || "-")}</td>
+          <td class="p-4 align-top">${escapeHtml(row.phone || "-")}</td>
+          <td class="p-4 align-top break-all">${escapeHtml(row.email || "-")}</td>
+          <td class="p-4 align-top max-w-sm break-words">${escapeHtml(row.message || "-")}</td>
+          <td class="p-4 align-top">${getStatusBadge(row)}</td>
+        `;
+        tableBody.appendChild(tr);
+      });
+    }
+
+    function applyFilters() {
+      const searchValue = document.getElementById("searchInput").value.toLowerCase().trim();
+      const sourceValue = document.getElementById("sourceFilter").value.toLowerCase();
+
+      filteredData = allData.filter((row) => {
+        const matchesSearch =
+          (row.name || "").toLowerCase().includes(searchValue) ||
+          (row.email || "").toLowerCase().includes(searchValue) ||
+          (row.phone || "").toLowerCase().includes(searchValue) ||
+          (row.message || "").toLowerCase().includes(searchValue) ||
+          (row.source || "").toLowerCase().includes(searchValue);
+
+        const matchesSource =
+          sourceValue === "all" || (row.source || "").toLowerCase() === sourceValue;
+
+        return matchesSearch && matchesSource;
+      });
+
+      renderTable(filteredData);
+    }
+
+   async function loadDashboard() {
+  const tableBody = document.getElementById("tableBody");
+  const refreshBtn = document.getElementById("refreshBtn");
+
+  try {
+    if (refreshBtn) refreshBtn.textContent = "Loading...";
+
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="7" class="p-6 text-center text-gray-500">Loading latest data...</td>
+      </tr>
+    `;
+
+    const response = await fetch(API_URL + "&t=" + Date.now());
+    const data = await response.json();
+
+    allData = Array.isArray(data)
+      ? data.map(normalizeRow).reverse()
+      : [];
+
+    filteredData = [...allData];
+    renderTable(filteredData);
+
+  } catch (error) {
+    console.error("Dashboard error:", error);
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="7" class="p-6 text-center text-red-600">
+          Could not load data. Please click Refresh.
+        </td>
+      </tr>
+    `;
+  } finally {
+    if (refreshBtn) refreshBtn.textContent = "Refresh";
+  }
+}
+
+    document.getElementById("searchInput").addEventListener("input", applyFilters);
+    document.getElementById("sourceFilter").addEventListener("change", applyFilters);
+
+    document.getElementById("clearSearchBtn").addEventListener("click", function () {
+      document.getElementById("searchInput").value = "";
+      document.getElementById("sourceFilter").value = "all";
+      filteredData = [...allData];
+      renderTable(filteredData);
+    });
+
+    document.getElementById("refreshBtn").addEventListener("click", function () {
+      loadDashboard();
+    });
+
+    document.getElementById("downloadExcelBtn").addEventListener("click", function () {
+      const exportData = filteredData.length ? filteredData : allData;
+
+      if (!exportData.length) {
+        alert("No data available to download.");
+        return;
+      }
+
+      const rows = [
+        ["Date", "Source", "Name", "Phone", "Email", "Message", "Status"]
+      ];
+
+      exportData.forEach((row) => {
+        let status = "New Lead";
+        const message = (row.message || "").toLowerCase();
+        const source = (row.source || "").toLowerCase();
+
+        if (message.includes("logo")) status = "Logo";
+        else if (message.includes("visiting")) status = "Visiting Card";
+        else if (message.includes("brochure")) status = "Brochure";
+        else if (message.includes("poster")) status = "Poster";
+        else if (message.includes("video")) status = "Video";
+        else if (message.includes("branding")) status = "Branding";
+        else if (source === "popup") status = "Popup Lead";
+        else if (source === "contact form") status = "Contact Lead";
+
+        rows.push([
+          formatDate(row.date),
+          row.source || "-",
+          row.name || "-",
+          row.phone || "-",
+          row.email || "-",
+          row.message || "-",
+          status
+        ]);
+      });
+
+      const csvContent = rows
+        .map((row) => row.map(escapeCsvValue).join(","))
+        .join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "digi_design_leads.csv";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      URL.revokeObjectURL(url);
+    });
+
+    loadDashboard();
+    setInterval(loadDashboard, 30000);
+  </script>
+  <script>
+function logout() {
+  localStorage.removeItem("dashboardAuth");
+  window.location.href = "index.html";
+}
+</script>
+</body>
+</html>

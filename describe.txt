@@ -1,0 +1,58 @@
+# Digi Design - Website Features Description
+
+Digi Design is a premium portfolio and lead management platform specifically designed for Dermatology and Cosmetology clinics. The website focuses on high-end aesthetics, storytelling, and practical lead tracking.
+
+## 1. Landing Page (Home)
+- **High-Impact Visuals**: Features a full-screen video background in the hero section with bold, punchy typography using premium Google Fonts (Epilogue & Manrope).
+- **Interactive Experience**: 
+    - **Custom Cursor**: A dynamic dot and ring cursor that follows the mouse and reacts to hoverable elements.
+    - **Dynamic Ticker**: An auto-scrolling marquee highlighting core values and services.
+    - **Scroll Reveal Animations**: Elements fade and slide into view as the user scrolls, creating a polished feel.
+- **Service Gallery**: 
+    - A categorized portfolio (ADS, Brochures, Logos, Packaging, etc.) with a built-in lightbox for full-screen image viewing.
+    - Features an auto-scrolling marquee of recent works to showcase breadth.
+- **Value Proposition**: Detailed "About" and "Process" sections highlighting clinical accuracy, data-driven strategy, and 200+ successful practice growths.
+
+## 2. Lead Management Dashboard
+- **Centralized Hub**: A private dashboard for clinic owners to manage leads collected from the website's popups and contact forms.
+- **Real-Time Data**: Fetches live data from a Google Sheets backend via Google Apps Script.
+- **Analytics Overview**: Summary cards showing Total Leads, Popup-specific leads, and Contact Form submissions.
+- **Search & Filter**: Robust search functionality (name, email, phone, message) and source-based filtering.
+- **Data Export**: One-click "Download Excel" functionality that generates a CSV of all current leads.
+- **Authentication**: Secured via a login gateway to protect sensitive patient/lead information.
+
+## 3. Packages & Pricing
+- **Tiered Services**: Four distinct service levels (Starter, Growth, Pro, Custom) tailored to different practice sizes.
+- **Problem-Solution Narrative**: Uses a storytelling approach ("A Story About Why Design Matters") to educate doctors on digital branding challenges like "The Silent Loss" and "The Time Tax."
+- **Transparent Pricing**: Clear breakdown of deliverables (Posts, Reels, Social Media Handling, Meta Ads) for each tier.
+
+## 4. Technical Stack & Integrations
+- **Frontend**: Clean HTML5, Vanilla CSS (with Tailwind CSS for utility), and Modern JavaScript.
+- **Responsiveness**: Fully optimized for mobile, tablet, and desktop viewing.
+- **Backend Integration**: Uses Google Apps Script as a lightweight serverless backend for storing and retrieving form submissions.
+- **Communication**: Integrated WhatsApp and Phone links for immediate patient-to-clinic conversion.
+
+## 5. UI & Design Aesthetics (Visual Identity)
+
+### **Color Palette & Branding**
+- **Primary Contrast**: A sophisticated blend of **Deep Red (#dc2626)** and **Gold/Bronze accents (#b08a4a)** against a clean **Cream (#f7f3ec)** or **Dark Gray/Black (#141414)** background.
+- **Theme Transitions**: The site transitions from a high-contrast dark hero section to a soft, readable light theme for informational content, enhancing focus and reducing eye strain.
+- **Visual Depth**: Extensive use of **Glassmorphism** (backdrop-blur) on navigation bars and cards to create a modern, layered appearance.
+
+### **Typography System**
+- **Headlines (Epilogue)**: A bold, geometric sans-serif that commands attention, used for high-impact statements and section headers.
+- **Body & Labels (Manrope)**: A highly readable, versatile font used for descriptions, technical details, and dashboard data.
+- **Editorial Accents (Cormorant Garamond)**: Used on the Packages page to provide a "magazine-style" editorial feel, reinforcing the storytelling narrative.
+
+### **Layout Architecture**
+- **Sectioned Storytelling**: Content is broken into distinct "Chapters," guiding the user from identifying problems to discovering solutions and pricing.
+- **Whitespace Management**: Generous padding and wide margins are used to create a premium, "uncluttered" clinical feel.
+- **Dashboard Layout**: A card-based grid system for statistics, followed by a wide-format data table for lead management, optimized for quick scanning.
+
+### **Micro-Interactions & Animations**
+- **Cursor Dynamics**: A custom-coded "Cursor Dot & Ring" system that provides real-time feedback when hovering over interactive elements.
+- **Motion Design**:
+    - **Marquee Tickers**: Smooth, continuous horizontal scrolling for brand logos and core values.
+    - **Hover States**: Cards subtly lift and glow when hovered, providing tactile feedback.
+    - **Scroll Reveal**: Elements use cubic-bezier transitions to "reveal" themselves gracefully as the user navigates down the page.
+- **Floating Components**: A sticky WhatsApp button and a context-aware navigation bar ensure vital tools are always within reach.
