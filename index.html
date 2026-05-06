@@ -52,15 +52,44 @@
         }
 
         nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 1400px;
             height: 70px !important;
-            padding-top: 8px !important;
-            padding-bottom: 8px !important;
+            padding: 0 32px !important;
+            background: rgba(255, 255, 255, 0.72) !important;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+
+        nav.scrolled {
+            top: 12px;
+            width: 95%;
+            background: rgba(255, 255, 255, 0.9) !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            height: 64px !important;
         }
 
         .compact-logo {
-            max-height: 60px;
+            max-height: 52px;
             height: auto;
             width: auto;
+            transition: all 0.5s ease;
+        }
+
+        nav.scrolled .compact-logo {
+            max-height: 44px;
         }
 
         /* CUSTOM CURSOR */
@@ -2039,29 +2068,27 @@
 
     <div id="scroll-progress"></div>
 
-    <!-- ========================== NAV (KEPT AS-IS) ========================== -->
-    <nav
-        class="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl flex justify-between items-center px-8 py-2 h-16 min-h-[70px] max-w-full mx-auto border-b border-transparent">
+    <nav id="mainNav">
         <div class="flex items-center gap-3">
             <img src="./images/logo.png" alt="Digi Design Logo" class="compact-logo object-contain flex-shrink-0">
         </div>
-        <div class="hidden md:flex gap-8 items-center">
-            <a class="text-blue-600 font-bold text-xs uppercase tracking-[0.05em] transition-colors duration-300"
+        <div class="hidden md:flex gap-10 items-center">
+            <a class="text-blue-600 font-bold text-xs uppercase tracking-[0.1em] transition-colors duration-300"
                 href="#home">Home</a>
-            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors duration-300"
+            <a class="text-zinc-500 font-bold text-xs uppercase tracking-[0.1em] hover:text-blue-600 transition-colors duration-300"
                 href="packages.html">Packages</a>
-            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors duration-300"
+            <a class="text-zinc-500 font-bold text-xs uppercase tracking-[0.1em] hover:text-blue-600 transition-colors duration-300"
                 href="#About">About</a>
-            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors duration-300"
+            <a class="text-zinc-500 font-bold text-xs uppercase tracking-[0.1em] hover:text-blue-600 transition-colors duration-300"
                 href="#Gallery">Gallery</a>
-            <a class="text-zinc-500 font-medium text-xs uppercase tracking-[0.05em] hover:text-blue-600 transition-colors duration-300"
+            <a class="text-zinc-500 font-bold text-xs uppercase tracking-[0.1em] hover:text-blue-600 transition-colors duration-300"
                 href="#contact">Contact</a>
         </div>
         <div class="flex items-center gap-4">
             <button onclick="document.getElementById('mobile-nav').classList.remove('translate-x-full')"
                 class="md:hidden material-symbols-outlined text-zinc-900">menu</button>
             <a href="login.html"
-                class="hidden md:block bg-zinc-900 hover:bg-black text-white px-4 py-1.5 rounded-md text-xs uppercase tracking-[0.05em] font-bold transition">Admin
+                class="hidden md:block bg-zinc-900 hover:bg-black text-white px-5 py-2 rounded-xl text-xs uppercase tracking-[0.08em] font-extrabold transition-all hover:scale-105 active:scale-95 shadow-lg shadow-zinc-200">Admin
                 Login</a>
         </div>
     </nav>
