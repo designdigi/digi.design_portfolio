@@ -29,6 +29,7 @@
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
+section[id] { scroll-margin-top: 100px; }
 body {
   font-family: var(--sans);
   background: var(--bg-cream);
@@ -129,7 +130,7 @@ nav.scrolled .compact-logo {
 .eyebrow-light::before { background: var(--accent-soft); }
 .chapter-open {
   min-height: 92vh; display: flex; align-items: center;
-  padding: 120px 0; position: relative;
+  padding: 80px 0; position: relative;
   background: 
     radial-gradient(circle at top left, rgba(239, 68, 68, 0.08), transparent 30%),
     radial-gradient(circle at bottom right, rgba(190, 24, 93, 0.06), transparent 30%),
@@ -162,7 +163,7 @@ nav.scrolled .compact-logo {
   font-weight: 400; max-width: 540px; line-height: 1.5;
 }
 .opening-divider { width: 80px; height: 1px; background: var(--accent); margin-top: 48px; }
-.chapter-setup { padding: 80px 0 100px; position: relative; }
+.chapter-setup { padding: 60px 0 80px; position: relative; }
 .setup-text {
   font-family: var(--serif); font-size: clamp(22px, 2.4vw, 30px);
   line-height: 1.5; color: var(--ink-soft); max-width: 780px;
@@ -174,12 +175,12 @@ nav.scrolled .compact-logo {
   height: 1px; background: var(--accent); opacity: 0.5;
 }
 .problems-section { 
-  padding: 80px 0 120px;
+  padding: 60px 0 80px;
   background: linear-gradient(180deg, #fffafa 0%, #fff1f2 45%, #fffafa 100%);
 }
 .scene {
   display: grid; grid-template-columns: 1fr 1fr;
-  align-items: center; gap: 80px; padding: 80px 0;
+  align-items: center; gap: 80px; padding: 40px 0;
   position: relative; border-bottom: 1px solid var(--hairline);
 }
 .scene:last-child { border-bottom: none; }
@@ -214,7 +215,7 @@ nav.scrolled .compact-logo {
 .chapter-pivot {
   background: linear-gradient(135deg, rgba(0,0,0,0.88) 0%, rgba(128,31,31,0.95) 100%); 
   color: #fffafa;
-  padding: 160px 0; position: relative; overflow: hidden;
+  padding: 100px 0; position: relative; overflow: hidden;
 }
 .chapter-pivot::before {
   content: ''; position: absolute; top: 60px; left: 50%;
@@ -244,7 +245,7 @@ nav.scrolled .compact-logo {
 }
 .pivot-body em { font-style: italic; color: var(--accent-soft); }
 .chapter-proof {
-  background: #4a0e0e; padding: 100px 0 160px;
+  background: #4a0e0e; padding: 80px 0 100px;
   text-align: center; color: #ffffff; position: relative;
 }
 .proof-prelude {
@@ -263,7 +264,7 @@ nav.scrolled .compact-logo {
   color: #fca5a5; font-weight: 400; font-style: italic;
 }
 .chapter-offer {
-  padding: 140px 0 100px; 
+  padding: 100px 0 80px; 
   background: linear-gradient(180deg, #fffafa 0%, #fff1f2 50%, #fffafa 100%);
   position: relative;
 }
@@ -343,7 +344,7 @@ nav.scrolled .compact-logo {
   font-style: italic; font-size: 14px; color: var(--muted);
 }
 .chapter-invite {
-  padding: 100px 0 160px; 
+  padding: 80px 0 100px; 
   background: linear-gradient(180deg, #fffafa 0%, #fff1f2 45%, #fffafa 100%);
   text-align: center; position: relative;
 }
@@ -471,7 +472,7 @@ nav.scrolled .compact-logo {
 .site-footer {
   background: linear-gradient(180deg, #4a0e0e 0%, #801F1F 100%);
   color: #fffafa;
-  padding: 90px 0 36px;
+  padding: 70px 0 36px;
   position: relative;
   overflow: hidden;
 }
@@ -603,6 +604,56 @@ nav.scrolled .compact-logo {
     text-align: center;
     gap: 10px;
   }
+}
+
+/* Custom Cursor */
+.cursor-dot,
+.cursor-ring {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.cursor-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: #fff;
+  transform: translate3d(-100px, -100px, 0);
+  transition: opacity 0.3s ease;
+  mix-blend-mode: difference;
+}
+
+.cursor-ring {
+  width: 38px;
+  height: 38px;
+  margin-left: -19px;
+  margin-top: -19px;
+  border-radius: 999px;
+  border: 1.5px solid #fff;
+  transform: translate3d(-100px, -100px, 0) scale(1);
+  transition: opacity 0.3s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  mix-blend-mode: difference;
+  background: transparent;
+}
+
+.cursor-visible .cursor-dot,
+.cursor-visible .cursor-ring {
+  opacity: 1;
+}
+
+.cursor-hover .cursor-ring {
+  transform: translate3d(var(--ring-x, -100px), var(--ring-y, -100px), 0) scale(1.6);
+  background: rgba(255, 255, 255, 1);
+  border-color: transparent;
+}
+
+.cursor-click .cursor-ring {
+  transform: translate3d(var(--ring-x, -100px), var(--ring-y, -100px), 0) scale(0.9);
 }
 </style>
 </head>
@@ -826,7 +877,6 @@ nav.scrolled .compact-logo {
     </div>
     <div class="footer-bottom">
       <div class="footer-copy">© 2026 Digi Design Agency. All rights reserved.</div>
-      <div class="footer-mark">— Curated Excellence.</div>
     </div>
   </div>
 </footer>
@@ -856,28 +906,57 @@ nav.scrolled .compact-logo {
   // --- Custom Cursor Logic ---
   const dot = document.querySelector('.cursor-dot');
   const ring = document.querySelector('.cursor-ring');
-  let mouseX = -100, mouseY = -100, ringX = -100, ringY = -100;
+  const supportsFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  if (supportsFinePointer && dot && ring) {
+    document.documentElement.classList.add('custom-cursor-enabled');
+    let mX = window.innerWidth / 2, mY = window.innerHeight / 2;
+    let dX = mX, dY = mY, rX = mX, rY = mY;
+    const dS = 0.55, rS = 0.22;
 
-  document.addEventListener('mousemove', (e) => {
-    mouseX = e.clientX; mouseY = e.clientY;
-    dot.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
-    if (!document.documentElement.classList.contains('cursor-visible')) {
-      document.documentElement.classList.add('cursor-visible');
+    function animateCursor() {
+      dX += (mX - dX) * dS;
+      dY += (mY - dY) * dS;
+      rX += (mX - rX) * rS;
+      rY += (mY - rY) * rS;
+      dot.style.transform = `translate3d(${dX - 3}px, ${dY - 3}px, 0)`;
+      document.body.style.setProperty('--ring-x', `${rX}px`);
+      document.body.style.setProperty('--ring-y', `${rY}px`);
+      const isH = document.body.classList.contains('cursor-hover');
+      const sc = isH ? 1.6 : 1;
+      ring.style.transform = `translate3d(${rX}px, ${rY}px, 0) scale(${sc})`;
+      requestAnimationFrame(animateCursor);
     }
-  });
+    requestAnimationFrame(animateCursor);
 
-  const animateRing = () => {
-    ringX += (mouseX - ringX) * 0.15;
-    ringY += (mouseY - ringY) * 0.15;
-    ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0)`;
-    requestAnimationFrame(animateRing);
-  };
-  animateRing();
+    document.addEventListener('mousemove', (e) => {
+      mX = e.clientX; mY = e.clientY;
+      if (!document.body.classList.contains('cursor-visible')) {
+        document.body.classList.add('cursor-visible');
+        dot.style.opacity = '1';
+        ring.style.opacity = '1';
+      }
+    });
 
-  document.querySelectorAll('a, button, .package-card, .scene-compact').forEach(el => {
-    el.addEventListener('mouseenter', () => ring.style.transform += ' scale(1.5)');
-    el.addEventListener('mouseleave', () => ring.style.transform = ring.style.transform.replace(' scale(1.5)', ''));
-  });
+    document.addEventListener('mouseleave', () => {
+      document.body.classList.remove('cursor-visible', 'cursor-hover', 'cursor-click');
+      dot.style.opacity = '0';
+      ring.style.opacity = '0';
+    });
+
+    document.addEventListener('mousedown', () => document.body.classList.add('cursor-click'));
+    document.addEventListener('mouseup', () => document.body.classList.remove('cursor-click'));
+
+    const interactiveSelector = 'a, button, .work-card, .why-card, .info-card, .submit-btn, .whatsapp-btn, .hero-cta-primary, .hero-cta-secondary, input, textarea, select, .package-card, .scene-compact';
+    document.addEventListener('mouseover', (e) => {
+      if (e.target.closest(interactiveSelector)) document.body.classList.add('cursor-hover');
+    });
+    document.addEventListener('mouseout', (e) => {
+      if (e.target.closest(interactiveSelector)) document.body.classList.remove('cursor-hover');
+    });
+  } else {
+    if (dot) dot.style.display = 'none';
+    if (ring) ring.style.display = 'none';
+  }
 
   // --- 3D Tilt Effect ---
   const MAX_TILT = 9;

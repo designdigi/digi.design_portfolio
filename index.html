@@ -122,39 +122,40 @@
         }
 
         .cursor-dot {
-            width: 8px;
-            height: 8px;
+            width: 6px;
+            height: 6px;
             border-radius: 999px;
-            background: #06b6d4;
+            background: #fff;
             transform: translate3d(-100px, -100px, 0);
-            transition: opacity 0.2s ease;
+            transition: opacity 0.3s ease;
+            mix-blend-mode: difference;
         }
 
         .cursor-ring {
-            width: 42px;
-            height: 42px;
-            margin-left: -21px;
-            margin-top: -21px;
+            width: 38px;
+            height: 38px;
+            margin-left: -19px;
+            margin-top: -19px;
             border-radius: 999px;
-            border: 2px solid rgba(6, 182, 212, 0.55);
+            border: 1.5px solid #fff;
             transform: translate3d(-100px, -100px, 0) scale(1);
-            transition: opacity 0.2s ease, transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
-            z-index: 99998;
+            transition: opacity 0.3s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+            mix-blend-mode: difference;
+            background: transparent;
         }
-
         .cursor-visible .cursor-dot,
         .cursor-visible .cursor-ring {
             opacity: 1;
         }
 
         .cursor-hover .cursor-ring {
-            transform: translate3d(var(--ring-x, -100px), var(--ring-y, -100px), 0) scale(1.35);
-            border-color: rgba(6, 182, 212, 1);
-            background: rgba(6, 182, 212, 0.08);
+            transform: translate3d(var(--ring-x, -100px), var(--ring-y, -100px), 0) scale(1.6);
+            background: rgba(255, 255, 255, 1);
+            border-color: transparent;
         }
 
         .cursor-click .cursor-ring {
-            transform: translate3d(var(--ring-x, -100px), var(--ring-y, -100px), 0) scale(0.82);
+            transform: translate3d(var(--ring-x, -100px), var(--ring-y, -100px), 0) scale(0.9);
         }
 
         /* Top Progress Bar */
@@ -220,6 +221,10 @@
 
         html {
             scroll-behavior: smooth;
+        }
+
+        section[id], footer[id] {
+            scroll-margin-top: 100px;
         }
 
         /* HERO — NEW: bold, punchy, doctor-positioned */
@@ -2078,9 +2083,9 @@
             <a class="text-zinc-500 font-bold text-xs uppercase tracking-[0.1em] hover:text-blue-600 transition-colors duration-300"
                 href="packages.html">Packages</a>
             <a class="text-zinc-500 font-bold text-xs uppercase tracking-[0.1em] hover:text-blue-600 transition-colors duration-300"
-                href="#About">About</a>
+                href="#about">About</a>
             <a class="text-zinc-500 font-bold text-xs uppercase tracking-[0.1em] hover:text-blue-600 transition-colors duration-300"
-                href="#Gallery">Gallery</a>
+                href="#gallery">Gallery</a>
             <a class="text-zinc-500 font-bold text-xs uppercase tracking-[0.1em] hover:text-blue-600 transition-colors duration-300"
                 href="#contact">Contact</a>
         </div>
@@ -2322,7 +2327,7 @@
     </section>
 
     <!-- ========================== GALLERY (KEPT) ========================== -->
-    <section id="Gallery" class="gallery-section">
+    <section id="gallery" class="gallery-section">
         <div class="glow-orb glow-1"></div>
         <div class="glow-orb glow-2"></div>
 
@@ -2516,7 +2521,6 @@
             </div>
             <div class="footer-bottom">
                 <div class="footer-copy">© 2026 Digi Design Agency. All rights reserved.</div>
-                <div class="footer-mark">— Curated Excellence.</div>
             </div>
         </div>
     </footer>
@@ -2623,27 +2627,36 @@
                 dotY += (mouseY - dotY) * dotSpeed;
                 ringX += (mouseX - ringX) * ringSpeed;
                 ringY += (mouseY - ringY) * ringSpeed;
-                dot.style.transform = `translate3d(${dotX - 4}px, ${dotY - 4}px, 0)`;
+                dot.style.transform = `translate3d(${dotX - 3}px, ${dotY - 3}px, 0)`;
                 document.body.style.setProperty('--ring-x', `${ringX}px`);
                 document.body.style.setProperty('--ring-y', `${ringY}px`);
-                ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) scale(1)`;
+                const isHovering = document.body.classList.contains('cursor-hover');
+                const scale = isHovering ? 1.6 : 1;
+                ring.style.transform = `translate3d(${ringX}px, ${ringY}px, 0) scale(${scale})`;
                 requestAnimationFrame(animateCursor);
             }
             requestAnimationFrame(animateCursor);
             document.addEventListener('mousemove', (e) => {
                 mouseX = e.clientX; mouseY = e.clientY;
-                document.body.classList.add('cursor-visible');
+                if (!document.body.classList.contains('cursor-visible')) {
+                    document.body.classList.add('cursor-visible');
+                    dot.style.opacity = '1';
+                    ring.style.opacity = '1';
+                }
             });
             document.addEventListener('mouseleave', () => {
                 document.body.classList.remove('cursor-visible', 'cursor-hover', 'cursor-click');
+                dot.style.opacity = '0';
+                ring.style.opacity = '0';
             });
             document.addEventListener('mousedown', () => document.body.classList.add('cursor-click'));
             document.addEventListener('mouseup', () => document.body.classList.remove('cursor-click'));
-            const interactiveSelector = ['a', 'button', '.work-card', '.why-card', '.info-card', '.submit-btn', '.whatsapp-btn', '.hero-cta-primary', '.hero-cta-secondary', 'input', 'textarea', 'select'].join(',');
-            document.addEventListener('pointermove', (e) => {
-                const interactive = e.target.closest(interactiveSelector);
-                if (interactive) document.body.classList.add('cursor-hover');
-                else document.body.classList.remove('cursor-hover');
+            const interactiveSelector = 'a, button, .work-card, .why-card, .info-card, .submit-btn, .whatsapp-btn, .hero-cta-primary, .hero-cta-secondary, input, textarea, select';
+            document.addEventListener('mouseover', (e) => {
+                if (e.target.closest(interactiveSelector)) document.body.classList.add('cursor-hover');
+            });
+            document.addEventListener('mouseout', (e) => {
+                if (e.target.closest(interactiveSelector)) document.body.classList.remove('cursor-hover');
             });
         } else {
             if (dot) dot.style.display = 'none';
@@ -2803,7 +2816,7 @@
                 buildWall(btn.dataset.cat);
 
                 // Optional: Scroll slightly to the top of gallery to show change
-                const galleryTop = document.getElementById('Gallery').offsetTop;
+                const galleryTop = document.getElementById('gallery').offsetTop;
                 window.scrollTo({ top: galleryTop - 100, behavior: 'smooth' });
             });
         });
